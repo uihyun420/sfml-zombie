@@ -31,6 +31,7 @@ protected:
 	float attackintervale; // 공격 간격
 
 
+
 	int hp; // 현재 체력	
 
 	Player* player = nullptr; // 플레이어 포인터

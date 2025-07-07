@@ -77,10 +77,17 @@ void Zombie::Update(float dt)
 	//	speed = maxSpeed; //스피드를 최대 스피드로 설정
 	//}
 
+	if (Utils::Distance(player->GetPosition(), GetPosition()) > 10.f) // 플레이어와 좀비의 거리가 10보다 크면
+	{
+		direction = Utils::GetNormal(player->GetPosition() - position); //플레이어 방향 구하기
+		SetRotation(Utils::Angle(direction)); //플레이어 방향으로 회전	
+		SetPosition(GetPosition() + direction * speed * dt); //플레이어 방향으로 이동	
+	}
+	
 
-	direction = Utils::GetNormal(player->GetPosition() - position); //플레이어 방향 구하기
-	SetRotation(Utils::Angle(direction)); //플레이어 방향으로 회전	
-	SetPosition(GetPosition() + direction * speed * dt); //플레이어 방향으로 이동	
+
+
+	
 
 }
 

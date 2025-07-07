@@ -109,7 +109,7 @@ float Utils::Clamp01(float value)
     return Clamp(value, 0.f, 1.f);
 }
 
-float Utils::Magnitude(const sf::Vector2f& vec)
+float Utils::Magnitude(const sf::Vector2f& vec) 
 {
     return std::sqrtf(SqrMagnitude(vec));
 }
