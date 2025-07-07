@@ -48,7 +48,7 @@ void Player::Init()
 	//SetOrigin(Origins::MC);
 }
 
-void Player::Release()
+void Player::Release() 
 {
 }
 
@@ -68,7 +68,7 @@ void Player::Reset()
 	SetPosition({ 0.f, 0.f });
 	SetRotation(0.f);
 
-	direction = { 0.f, 0.f };
+	direction = { 0.f, 0.f }; 
 	look = { 1.0f, 0.f };
 }
 
