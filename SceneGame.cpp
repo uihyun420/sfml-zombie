@@ -16,16 +16,28 @@ void SceneGame::Init()
 	texIds.push_back("graphics/bloater.png");
 	texIds.push_back("graphics/crawler.png");
 	texIds.push_back("graphics/chaser.png");
+	texIds.push_back("graphics/crosshair.png");
+
 
 	AddGameObject(new TileMap("TileMap"));
 
 	player = (Player*)AddGameObject(new Player("Player"));
+
+	for (int i = 0; i < 100; ++i)
+	{
+	Zombie* zombie = (Zombie*)AddGameObject(new Zombie()); // 좀비 생성
+	zombie->SetActive(false); // 좀비 비활성화	
+	zombiePool.push_back(zombie); // 좀비 풀에 추가	
+	}
+
 
 	Scene::Init();
 }
 
 void SceneGame::Enter()
 {
+	FRAMEWORK.GetWindow().setMouseCursorVisible(false); // 마우스 커서 숨김
+
 	sf::Vector2f windowSize = FRAMEWORK.GetWindowSizeF();
 
 	worldView.setSize(windowSize);
@@ -34,22 +46,36 @@ void SceneGame::Enter()
 	uiView.setSize(windowSize);
 	uiView.setCenter(windowSize * 0.5f);
 
+
 	Scene::Enter();
+
+	cursor.setTexture(TEXTURE_MGR.Get("graphics/crosshair.png"));
+	Utils::SetOrigin(cursor, Origins::MC); // 원점 설정
+	
 }
 
 void SceneGame::Exit()
 {
+	FRAMEWORK.GetWindow().setMouseCursorVisible(true); // 마우스 커서 생김
+
 	for (Zombie* zombie : zombieList)
 	{
-		RemoveGameObject(zombie); // 좀비 제거
+		zombie->SetActive(false); // 좀비 비활성화
+		zombiePool.push_back(zombie); // 좀비 풀에 추가
 	}
 	zombieList.clear(); // 좀비 리스트 초기화
+
+
 	Scene::Exit();	// 씬 종료시 호출되는 함수
 }
 
 void SceneGame::Update(float dt)
 {
-	
+	cursor.setPosition(ScreenToUi(InputMgr::GetMousePosition())); // 커서 위치 업데이트
+
+
+
+
 	Scene::Update(dt);
 	worldView.setCenter(player->GetPosition());
 
@@ -64,10 +90,36 @@ void SceneGame::Update(float dt)
 	}
 }
 
+
+void SceneGame::Draw(sf::RenderWindow& window)
+{
+	Scene::Draw(window); // 씬의 기본 그리기 함수 호출
+
+	window.setView(uiView); // UI 뷰 설정
+	window.draw(cursor); // 커서 그리기
+
+}
+
+
+
 void SceneGame::SpawnZombies(int count)
 {
+	Zombie* zombie = nullptr; // 좀비 포인터 초기화	
 	for (int i = 0; i < 10; ++i)
 	{
+		if (zombiePool.empty()) // 좀비 풀에 남은 좀비가 없으면
+		{
+			zombie = (Zombie*)AddGameObject(new Zombie()); // 새로 좀비 생성
+			zombie->Init(); // 좀비 초기화
+		}
+		else
+		{
+			zombie = zombiePool.front(); // 좀비 풀에서 좀비 가져오기	
+			zombiePool.pop_front(); // 좀비 풀에서 제거	
+			zombie->SetActive(true); // 좀비 활성화	
+		}
+
+
 		Zombie* zombie = (Zombie*)AddGameObject(new Zombie()); // 좀비 생성
 		zombie->Init(); // 좀비 초기화
 
