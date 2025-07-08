@@ -109,7 +109,7 @@ float Utils::Clamp01(float value)
     return Clamp(value, 0.f, 1.f);
 }
 
-float Utils::Magnitude(const sf::Vector2f& vec) 
+float Utils::Magnitude(const sf::Vector2f& vec)
 {
     return std::sqrtf(SqrMagnitude(vec));
 }
@@ -203,6 +203,9 @@ float Utils::Dot(const sf::Vector2f& a, const sf::Vector2f& b)
 
 bool Utils::CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB)
 {
+    if (!shapeA.getGlobalBounds().intersects(shapeB.getGlobalBounds()))
+        return false;
+    
     auto pointsA = GetShapePoints(shapeA);
     auto pointsB = GetShapePoints(shapeB);
     return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());
@@ -211,6 +214,9 @@ bool Utils::CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB)
 
 bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB)
 {
+    if (!shapeA.getGlobalBounds().intersects(shapeB.getGlobalBounds()))
+        return false;
+    
     auto pointsA = GetShapePoints(shapeA);
     auto pointsB = GetShapePoints(shapeB);
     return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());

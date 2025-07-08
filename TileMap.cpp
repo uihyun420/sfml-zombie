@@ -6,16 +6,16 @@ TileMap::TileMap(const std::string& name)
 {
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size) 
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 {
-	cellCount = count; 
+	cellCount = count;
 	cellSize = size;
 
-	va.clear(); 
-	va.setPrimitiveType(sf::Quads);  
-	va.resize(count.x * count.y * 4); 
+	va.clear();
+	va.setPrimitiveType(sf::Quads);
+	va.resize(count.x * count.y * 4);
 
-	sf::Vector2f posOffset[4] = // 타일의 각 꼭짓점 위치 오프셋
+	sf::Vector2f posOffset[4] =
 	{
 		{ 0.f, 0.f },
 		{ size.x, 0.f },
@@ -23,7 +23,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 		{ 0.f, size.y },
 	};
 
-	sf::Vector2f texCoords[4] = // 타일의 각 꼭짓점 텍스처 좌표
+	sf::Vector2f texCoords[4] =
 	{
 		{ 0.f, 0.f },
 		{ 50.f, 0.f },
@@ -31,14 +31,14 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 		{ 0.f, 50.f },
 	};
 
-	for (int i = 0; i < count.y; ++i) // 타일 맵의 각 행과 열을 순회하면서 타일을 설정
+	for (int i = 0; i < count.y; ++i)
 	{
-		for (int j = 0; j < count.x; ++j) // 각 열을 순회하면서 타일을 설정
+		for (int j = 0; j < count.x; ++j)
 		{
-			int texIndex = Utils::RandomRange(0, 3); // 랜덤하게 텍스처 인덱스를 선택
-			if (i == 0 || i == count.y - 1 || j == 0 || j == count.x - 1) // 테두리 타일의 경우
+			int texIndex = Utils::RandomRange(0, 3);
+			if (i == 0 || i == count.y - 1 || j == 0 || j == count.x - 1)
 			{
-				texIndex = 3; // 테두리 타일은 항상 같은 텍스처 사용
+				texIndex = 3;
 			}
 
 			int quadIndex = i * count.x + j;
@@ -55,9 +55,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 	}
 }
 
-
-
-void TileMap::UpdateTransform() 
+void TileMap::UpdateTransform()
 {
 	transform = sf::Transform::Identity;
 	transform.translate(position);
@@ -123,7 +121,6 @@ void TileMap::Reset()
 
 	SetOrigin(Origins::MC);
 	SetScale({ 1.f, 1.f });
-	SetRotation(45.f);
 	SetPosition({ 0.f, 0.f });
 }
 
@@ -131,11 +128,10 @@ void TileMap::Update(float dt)
 {
 }
 
-void TileMap::Draw(sf::RenderWindow& window) 
+void TileMap::Draw(sf::RenderWindow& window)
 {
 	sf::RenderStates state;
 	state.texture = texture;
-	state.transform = transform; 
+	state.transform = transform;
 	window.draw(va, state);
 }
-

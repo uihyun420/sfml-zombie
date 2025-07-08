@@ -1,41 +1,39 @@
 #pragma once
 #include "GameObject.h"
-class Player; // 전방 선언	
+#include "HitBox.h"
 
-
+class Player;
 
 class Zombie : public GameObject
 {
 public:
-	enum class Type
+	enum class Types
 	{
-		Bloater, // 좀비 종류들
-		chaser, 
-		Crawler,  
+		Bloater,
+		Chaser,
+		Crawler,
 	};
 
-	static const int TotalTypes = 3; // 총 좀비 종류 수
-
+	static const int TotalTypes = 3;
+	
 protected:
-	Type type = Type::Bloater; // 좀비 종류
-
+	Types type = Types::Bloater;
 
 	sf::Sprite body;
 	std::string texId;
 
-	sf::Vector2f direction;// 방향
+	sf::Vector2f direction;
 
-	int maxHp; // 최대 체력
-	float speed; // 이동 속도	
-	int damage; // 공격력
-	float attackintervale; // 공격 간격
+	int maxHp = 0;
+	float speed = 0.f;
+	int damage = 0;
+	float attackInterval = 0.f;
 
+	int hp;
 
+	Player* player = nullptr;
 
-	int hp; // 현재 체력	
-
-	Player* player = nullptr; // 플레이어 포인터
-
+	HitBox hitBox;
 
 public:
 	Zombie(const std::string& name = "");
@@ -53,12 +51,16 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
+	void SetType(Types type);
 
+	sf::FloatRect GetLocalBounds() const override
+	{
+		return body.getLocalBounds();
+	}
 
-
-
-	void SetType(Type type);
-
-
+	sf::FloatRect GetGlobalBounds() const override
+	{
+		return body.getGlobalBounds();
+	}
 };
 

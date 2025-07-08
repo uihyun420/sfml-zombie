@@ -13,10 +13,10 @@ public:
 
 	// Random
 	static float RandomValue(); // 0.0f ~ 1.0f
-	static int RandomRange(int min, int maxExclude); 
-	static float RandomRange(float min, float max); // 0.0f ~ 1.0f
-	static sf::Vector2f RandomOnUnitCircle(); // 랜덤 방향 벡터 (길이 1.0f)
-	static sf::Vector2f RandomInUnitCircle();  
+	static int RandomRange(int min, int maxExclude);
+	static float RandomRange(float min, float max);
+	static sf::Vector2f RandomOnUnitCircle();
+	static sf::Vector2f RandomInUnitCircle();
 	static sf::Color RandomColor(bool opaque = true);
 	static sf::Vector2f RandomPointInRect(const sf::FloatRect& rect);
 
@@ -28,11 +28,11 @@ public:
 	static sf::Vector2f SetOrigin(sf::Sprite& obj, Origins preset);
 
 	// Math
-	static float Clamp(float value, float min, float max); // [min, max] 범위로 제한
-	static float Clamp01(float value); // [0.0f, 1.0f] 범위로 제한
+	static float Clamp(float value, float min, float max);
+	static float Clamp01(float value);
 
-	static float Magnitude(const sf::Vector2f& vec); // 벡터의 크기 (길이)
-	static float SqrMagnitude(const sf::Vector2f& vec); // 벡터의 크기의 제곱 (길이의 제곱)
+	static float Magnitude(const sf::Vector2f& vec);
+	static float SqrMagnitude(const sf::Vector2f& vec);
 
 	static sf::Vector2f GetNormal(const sf::Vector2f& vec);
 	static void Normalize(sf::Vector2f& vec);
@@ -65,4 +65,5 @@ public:
 		const std::vector<sf::Vector2f>& polygonB, const sf::Transform& transformB);
 
 };
+
 

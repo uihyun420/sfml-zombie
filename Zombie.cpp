@@ -42,12 +42,10 @@ void Zombie::SetOrigin(Origins preset)
 
 void Zombie::Init()
 {
-	sortingLayer = SortingLayers::Foreground; //솔팅	레이어 설정 솔팅 레이어 항상 설정 하기
-	sortingOrder = 0; //솔팅 오더 설정
+	sortingLayer = SortingLayers::Foreground;
+	sortingOrder = 0;
 
-
-	SetType(type); //좀비 타입 설정
-
+	SetType(type);
 }
 
 void Zombie::Release()
@@ -56,71 +54,56 @@ void Zombie::Release()
 
 void Zombie::Reset()
 {
-	player = (Player*)SCENE_MGR.GetCurrentScene()->FindGameObject("Player");	// 플레이어 찾기
+	player = (Player*)SCENE_MGR.GetCurrentScene()->FindGameObject("Player");
 
-	body.setTexture(TEXTURE_MGR.Get(texId)); //텍스쳐 매니저에서 텍스쳐 가져오기	
-	SetOrigin(Origins::MC); //오리진 설정
-	SetPosition({ 0.f,0.f }); //초기 위치 설정	
-	SetRotation(0.f); //초기 회전 설정	
-	SetScale({ 1.f,1.f }); //초기 스케일 설정	
+	body.setTexture(TEXTURE_MGR.Get(texId), true);
+	SetOrigin(Origins::MC);
+	SetPosition({ 0.f, 0.f });
+	SetRotation(0.f);
+	SetScale({ 1.f, 1.f });
 }
 
 void Zombie::Update(float dt)
 {
-	//거리를 재서 플레이어와 좀비의 거리가 가까워지면 스피드를 0으로 설정
-	//if (Utils::GetDistance(player->GetPosition(), GetPosition()) < 50.f) //플레이어와 좀비의 거리가 50보다 작으면
-	//{
-	//	speed = 0.f; //스피드를 0으로 설정
-	//}
-	//else
-	//{
-	//	speed = maxSpeed; //스피드를 최대 스피드로 설정
-	//}
+	direction = Utils::GetNormal(player->GetPosition() - GetPosition());
+	SetRotation(Utils::Angle(direction));
+	SetPosition(GetPosition() + direction * speed * dt);
 
-	if (Utils::Distance(player->GetPosition(), GetPosition()) > 10.f) // 플레이어와 좀비의 거리가 10보다 크면
-	{
-		direction = Utils::GetNormal(player->GetPosition() - position); //플레이어 방향 구하기
-		SetRotation(Utils::Angle(direction)); //플레이어 방향으로 회전	
-		SetPosition(GetPosition() + direction * speed * dt); //플레이어 방향으로 이동	
-	}
-	
-
-
-
-	
-
+	hitBox.UpdateTransform(body, GetLocalBounds());
 }
 
 void Zombie::Draw(sf::RenderWindow& window)
 {
-	window.draw(body); //좀비 그리기
+	window.draw(body);
+	hitBox.Draw(window);
 }
 
-void Zombie::SetType(Type type)
+void Zombie::SetType(Types type)
 {
 	this->type = type;
 	switch (this->type)
 	{
-		case Type::Bloater:
-			texId = "graphics/bloater.png";
-			maxHp = 100;
-			speed = 100.f;
-			damage = 100.f;
-			attackintervale = 1.f;
-			break;
-		case Type::chaser:
-			texId = "graphics/chaser.png";
-			maxHp = 50;
-			speed = 200.f;
-			damage = 50.f;
-			attackintervale = 1.f;
-			break;
-		case Type::Crawler:
-			texId = "graphics/crawler.png";
-			maxHp = 50;
-			speed = 50.f;
-			damage = 50.f;
-			attackintervale = 1.f;
-			break;
+	case Types::Bloater:
+		texId = "graphics/bloater.png";
+		maxHp = 200;
+		speed = 50;
+		damage = 100.f;
+		attackInterval = 1.f;
+		break;
+	case Types::Chaser:
+		texId = "graphics/chaser.png";
+		maxHp = 100;
+		speed = 100.f;
+		damage = 100.f;
+		attackInterval = 1.f;
+		break;
+	case Types::Crawler:
+		texId = "graphics/crawler.png";
+		maxHp = 50;
+		speed = 200;
+		damage = 100.f;
+		attackInterval = 1.f;
+		break;
 	}
+
 }
