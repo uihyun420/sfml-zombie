@@ -20,10 +20,21 @@ protected:
 
 	HitBox hitBox;
 
-	std::list<Bullet*> bulletList;
-	std::list<Bullet*> bulletPool;
+	std::list<Bullet*> bulletList; // 총알 리스트
+	std::list<Bullet*> bulletPool; // 총알 풀 (재사용을 위한)
+
+
+	float shootInterval = 0.5f; // 총알 발사 간격
+	float shootTimer = 0.f; // 총알 발사 타이머
+
+	int hp = 0;
+	int maxHp = 100;
+
+	bool isAlive = true;
+
 
 public:
+	bool IsAlive()const { return hp > 0; }
 	Player(const std::string& name = "");
 	~Player() override = default;
 
@@ -39,7 +50,9 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	sf::FloatRect GetLocalBounds() const override
+
+
+	sf::FloatRect GetLocalBounds() const override 
 	{
 		return body.getLocalBounds();
 	}
@@ -49,6 +62,16 @@ public:
 		return body.getGlobalBounds();
 	}
 
+
+	const HitBox& GetHitBox() const
+	{
+		return hitBox;
+	}
+
 	void Shoot();
+
+
+	void OnDamage(int damage);
+
 };
 

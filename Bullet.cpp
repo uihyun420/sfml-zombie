@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Bullet.h"
 #include "SceneGame.h"
+#include "Zombie.h"
 
 
 Bullet::Bullet(const std::string& name)
@@ -51,9 +52,9 @@ void Bullet::Release()
 {
 }
 
-void Bullet::Reset()
+void Bullet::Reset() // 총알 초기화 함수
 {
-	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene()); // 현재 씬을 게임 씬으로 캐스팅
 	body.setTexture(TEXTURE_MGR.Get(texId), true); 
 	SetOrigin(Origins::ML);
 
@@ -69,15 +70,26 @@ void Bullet::Reset()
 void Bullet::Update(float dt)
 {
 	SetPosition(position + direction * speed * dt);
-	hitBox.UpdateTransform(body, GetLocalBounds());
+	hitBox.UpdateTransform(body, GetLocalBounds()); // 히트박스 업데이트
 
 	//충돌처리
+	const auto& list = sceneGame->GetZombies();
+	for(auto& zombie : list)
+	{
+		if (Utils::CheckCollision(hitBox.rect, zombie->GetHitBox().rect))
+		{
+			SetActive(false); // 총알 비활성화
+			zombie->OnDamage(damage); // 좀비에게 데미지 적용
+			break; // 충돌이 발생하면 루프를 종료
+		}
+		
+	}
 }
 
 void Bullet::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
-	hitBox.Draw(window);
+	hitBox.Draw(window);   // 히트박스 그리기
 
 }
 

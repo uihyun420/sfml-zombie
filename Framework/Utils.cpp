@@ -224,6 +224,7 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 
 bool Utils::CheckCircleCollision(const sf::Vector2f& centerA, float radiusA, const sf::Vector2f& centerB, float radiusB)
 {
+
     float distanceSqr = SqrMagnitude(centerA - centerB);
     float radiusSum = radiusA + radiusB;
     return distanceSqr <= radiusSum * radiusSum;

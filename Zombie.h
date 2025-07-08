@@ -28,12 +28,17 @@ protected:
 	float speed = 0.f;
 	int damage = 0;
 	float attackInterval = 0.f;
+	float attackTimer = 0.f; // 공격 타이머
 
 	int hp;
 
 	Player* player = nullptr;
 
 	HitBox hitBox;
+
+
+
+
 
 public:
 	Zombie(const std::string& name = "");
@@ -62,5 +67,12 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	const HitBox& GetHitBox() const
+	{
+		return hitBox;
+	}
+
+	void OnDamage(int damage);
 };
 

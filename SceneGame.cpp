@@ -70,6 +70,22 @@ void SceneGame::Update(float dt)
 
 	Scene::Update(dt);
 
+	auto it = zombieList.begin();
+	while (it != zombieList.end())
+	{
+		if (!(*it)->GetActive())
+		{
+			zombiePool.push_back(*it);
+			it = zombieList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+
+
 	worldView.setCenter(player->GetPosition());
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))

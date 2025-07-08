@@ -3,7 +3,7 @@
 #include "SceneGame.h"
 #include "Bullet.h"
 
-Player::Player(const std::string& name)
+Player::Player(const std::string& name) //플레이어 생성자
 	: GameObject(name)
 {
 
@@ -79,9 +79,14 @@ void Player::Reset()
 
 	direction = { 0.f, 0.f };
 	look = { 1.0f, 0.f };
+
+	shootTimer = 0.f;
+	shootInterval = 0.2f; // 총알 발사 간격 설정
+
+	hp = maxHp;
 }
 
-void Player::Update(float dt)
+void Player::Update(float dt) 
 {
 	auto it = bulletList.begin();
 	while (it != bulletList.end())
@@ -112,8 +117,10 @@ void Player::Update(float dt)
 
 	hitBox.UpdateTransform(body, GetLocalBounds());
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+	shootTimer += dt;
+	if (InputMgr::GetMouseButton(sf::Mouse::Left) && shootTimer > shootInterval)
 	{
+		shootTimer = 0.f;
 		Shoot();
 	}
 }
@@ -144,4 +151,19 @@ void Player::Shoot()
 
 	bulletList.push_back(bullet);
 	sceneGame->AddGameObject(bullet);
+}
+
+
+void Player::OnDamage(int damage)
+{
+	if (!IsAlive())
+		return;
+
+	hp = Utils::Clamp(hp - damage, 0, maxHp);
+	std::cout << hp << std::endl;
+	if (hp == 0)
+	{
+
+		SCENE_MGR.ChangeScene(SceneIds::Game);
+	}
 }
